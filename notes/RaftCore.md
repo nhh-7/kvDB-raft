@@ -1,6 +1,6 @@
 # Raft
 
-![](C:\HHN\c++\project\kvStorageBasedRaft\notes\imgs\Raft模块图.png)
+![](.\imgs\Raft模块图.png)
 
 ## `ApplyMsg.h`
 
@@ -24,11 +24,11 @@ Raft 中负责持久化日志、持久化快照的模块。
 
 1. 选举时间超时，节点从`Follower`变为`Candidate`，并主动发起选举，向其他`Raft`节点发送`RequestVote`请求，如果收到大多数票，则成为`Leader`，如果收到`term`更大的`reply`，则退回到`Follower`。
 
-   ![](C:\HHN\c++\project\kvStorageBasedRaft\notes\imgs\leader选举流程.png)
+   ![](.\imgs\leader选举流程.png)
 
 2. 日志复制（心跳）`sendAppendEntries`， 只有`Leader`才要向其他`raft`节点发送日志或者心跳，并且当多数`raft`节点成功复制了日志，本条日志可以提交。Leader会在后台每隔固定时间循环发送心跳。
 
-   ![](C:\HHN\c++\project\kvStorageBasedRaft\notes\imgs\日志复制与心跳流程.png)
+   ![](.\imgs\日志复制与心跳流程.png)
 
 3. 日志操作工具，包括判断传来的日志是否与本节点匹配、、、
 
@@ -58,7 +58,7 @@ Raft 中负责持久化日志、持久化快照的模块。
 
 `kvServer`就是一个中间节点，负责沟通`kvDB`和`raft`节点
 
-每个 KvServer 节点负责初始化自身的 `Raft节点`，将所有`Raft`节点连接起来。所以在实际使用场景中，服务端只需要创建若干个`Server`节点即可。客户端则使用`clerk`来使用服务端。KvServer 构造还会创建自身的raft节点、raft节点共用的applyChan，以及与其他raft节点的连接，并传递给raft节点。
+每个 KvServer 节点负责初始化自身的 `Raft节点`，将所有`Raft`节点连接起来。所以在实际使用场景中，服务端只需要创建若干个`Server`节点即可。客户端则使用`clerk`来使用服务端。KvServer 构造还会创建自身的raft节点、与raft节点共用的applyChan，以及与其他raft节点的连接，并传递给raft节点。
 
 ### kvServer功能
 
